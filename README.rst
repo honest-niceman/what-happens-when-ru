@@ -1,32 +1,33 @@
-What happens when...
-====================
+Что происходит, когда...
+========================
 
-This repository is an attempt to answer the age-old interview question "What
-happens when you type google.com into your browser's address box and press
-enter?"
+Этот репозиторий - попытка ответить на вечный вопрос интервьюеров:
+"Что происходит, когда вы вводите google.com в адресную строку браузера
+и нажимаете Enter?"
 
-Except instead of the usual story, we're going to try to answer this question
-in as much detail as possible. No skipping out on anything.
+Но вместо простого объяснения, мы постараемся дать на этот вопрос как можно
+более подробный ответ. Максимально вдаваясь в подробности.
 
-This is a collaborative process, so dig in and try to help out! There are tons
-of details missing, just waiting for you to add them! So send us a pull
-request, please!
+Это репозиторий – результат совместных трудов, так что не стесняйтесь присоединяться
+и помогать в улучшении материала. Почти наверняка, упущено ещё множество деталей, которые
+можете добавить именно вы! Ждём ваших PR!
 
-This is all licensed under the terms of the `Creative Commons Zero`_ license.
+Содержимое данного репозитория распространяется согласно условиям лицензии
+`Creative Commons Zero`_.
 
-Read this in `简体中文`_ (simplified Chinese), `日本語`_ (Japanese), `한국어`_
-(Korean) and `Spanish`_. NOTE: these have not been reviewed by the alex/what-happens-when
-maintainers.
+Данный материал доступен на `English`_ (английском), `简体中文`_ (упрощённом китайском),
+`日本語`_ (японском), `한국어`_ (корейском) и `Spanish`_ (испанском).
+Примечание: эти материалы не были проверены командой alex/what-happens-when.
 
-Table of Contents
-====================
+Содержание
+==========
 
 .. contents::
    :backlinks: none
    :local:
 
-The "g" key is pressed
-----------------------
+Нажатие клавиши "g"
+-------------------
 The following sections explain the physical keyboard actions
 and the OS interrupts. When you press the key "g" the browser receives the
 event and the auto-complete functions kick in.
@@ -39,8 +40,8 @@ popular searches from the internet as a whole. As you are typing
 with each keypress. It may even suggest "google.com" before you finish typing
 it.
 
-The "enter" key bottoms out
----------------------------
+Нажатие клавиши "Enter"
+-----------------------
 
 To pick a zero point, let's choose the Enter key on the keyboard hitting the
 bottom of its range. At this point, an electrical circuit specific to the enter
@@ -96,8 +97,8 @@ connection, but historically has been over PS/2 or ADB connections.
   event.
 
 
-Interrupt fires [NOT for USB keyboards]
----------------------------------------
+Срабатывание прерывания [НЕ для USB клавиатур]
+----------------------------------------------
 
 The keyboard sends signals on its interrupt request line (IRQ), which is mapped
 to an ``interrupt vector`` (integer) by the interrupt controller. The CPU uses
@@ -106,7 +107,7 @@ functions (``interrupt handlers``) which are supplied by the kernel. When an
 interrupt arrives, the CPU indexes the IDT with the interrupt vector and runs
 the appropriate handler. Thus, the kernel is entered.
 
-(On Windows) A ``WM_KEYDOWN`` message is sent to the app
+(Windows) Отправка сообщения ``WM_KEYDOWN`` в приложение
 --------------------------------------------------------
 
 The HID transport passes the key down event to the ``KBDHID.sys`` driver which
@@ -137,8 +138,8 @@ This code looks within the 3rd parameter that was passed to ``SendMessage``
 (``wParam``) and, because it is ``VK_RETURN`` knows the user has hit the ENTER
 key.
 
-(On OS X) A ``KeyDown`` NSEvent is sent to the app
---------------------------------------------------
+(OS X) Отправка события ``KeyDown`` NSEvent в приложение
+--------------------------------------------------------
 
 The interrupt signal triggers an interrupt event in the I/O Kit kext keyboard
 driver. The driver translates the signal into a key code which is passed to the
@@ -150,7 +151,7 @@ this queue by threads with sufficient privileges calling the
 handled by, an ``NSApplication`` main event loop, via an ``NSEvent`` of
 ``NSEventType`` ``KeyDown``.
 
-(On GNU/Linux) the Xorg server listens for keycodes
+(GNU/Linux) отслеживание кода клавиш сервером Xorg
 ---------------------------------------------------
 
 When a graphical ``X server`` is used, ``X`` will use the generic event
@@ -162,7 +163,7 @@ sends the character to the ``window manager`` (DWM, metacity, i3, etc), so the
 The graphical API of the window  that receives the character prints the
 appropriate font symbol in the appropriate focused field.
 
-Parse URL
+Разбор URL
 ---------
 
 * The browser now has the following information contained in the URL (Uniform
@@ -175,16 +176,16 @@ Parse URL
         Retrieve main (index) page
 
 
-Is it a URL or a search term?
------------------------------
+Являются ли введённые символы URL или поисковым запросом?
+---------------------------------------------------------
 
 When no protocol or valid domain name is given the browser proceeds to feed
 the text given in the address box to the browser's default web search engine.
 In many cases the URL has a special piece of text appended to it to tell the
 search engine that it came from a particular browser's URL bar.
 
-Convert non-ASCII Unicode characters in the hostname
-------------------------------------------------
+Преобразование не-ASCII символов Unicode в имя хоста
+----------------------------------------------------
 
 * The browser checks the hostname for characters that are not in ``a-z``,
   ``A-Z``, ``0-9``, ``-``, or ``.``.
@@ -192,8 +193,8 @@ Convert non-ASCII Unicode characters in the hostname
   the browser would apply `Punycode`_ encoding to the hostname portion of the
   URL.
 
-Check HSTS list
----------------
+Проверка списка HSTS
+--------------------
 * The browser checks its "preloaded HSTS (HTTP Strict Transport Security)"
   list. This is a list of websites that have requested to be contacted via
   HTTPS only.
@@ -206,7 +207,7 @@ Check HSTS list
   `downgrade attack`_, which is why the HSTS list is included in modern web
   browsers.)
 
-DNS lookup
+Поиск DNS
 ----------
 
 * Browser checks if the domain is in its cache. (to see the DNS Cache in
@@ -225,8 +226,8 @@ DNS lookup
   the ``ARP process`` below for the default gateway IP.
 
 
-ARP process
------------
+Процесс определения адреса (протокол ARP)
+-----------------------------------------
 
 In order to send an ARP (Address Resolution Protocol) broadcast the network
 stack library needs the target IP address to lookup. It also needs to know the
@@ -297,8 +298,8 @@ the default gateway it can resume its DNS process:
   requested and that flows up the list of DNS servers until the SOA is reached,
   and if found an answer is returned.
 
-Opening of a socket
--------------------
+Открытие сокета
+---------------
 Once the browser receives the IP address of the destination server, it takes
 that and the given port number from the URL (the HTTP protocol defaults to port
 80, and HTTPS to port 443), and makes a call to the system library function
@@ -367,8 +368,8 @@ This send and receive happens multiple times following the TCP connection flow:
    * The other sides ACKs the FIN packet and sends its own FIN
    * The closer acknowledges the other side's FIN with an ACK
 
-TLS handshake
--------------
+Установление TLS-соединения
+---------------------------
 * The client computer sends a ``ClientHello`` message to the server with its
   Transport Layer Security (TLS) version, list of cipher algorithms and
   compression methods available.
@@ -397,8 +398,8 @@ TLS handshake
 * From now on the TLS session transmits the application (HTTP) data encrypted
   with the agreed symmetric key.
 
-If a packet is dropped
-----------------------
+Если пакет потерян
+------------------
 
 Sometimes, due to network congestion or flaky hardware connections, TLS packets
 will be dropped before they get to their final destination. The sender then has
@@ -414,7 +415,7 @@ control`_. This varies depending on the sender; the most common algorithms are
   each packet acknowledged. If a packet is dropped, the window reduces
   exponentially until another packet is acknowledged.
 
-HTTP protocol
+HTTP протокол
 -------------
 
 If the web browser used was written by Google, instead of sending an HTTP
@@ -480,8 +481,8 @@ resolving the other domain, and follows all steps up to this point for that
 domain. The ``Host`` header in the request will be set to the appropriate
 server name instead of ``google.com``.
 
-HTTP Server Request Handle
---------------------------
+Обработка запроса HTTP-сервером
+-------------------------------
 The HTTPD (HTTP Daemon) server is the one handling the requests/responses on
 the server-side. The most common HTTPD servers are Apache or nginx for Linux
 and IIS for Windows.
@@ -510,8 +511,8 @@ and IIS for Windows.
   is running on PHP, the server uses PHP to interpret the index file, and
   streams the output to the client.
 
-Behind the scenes of the Browser
-----------------------------------
+За кулисами браузера
+--------------------
 
 Once the server supplies the resources (HTML, CSS, JS, images, etc.)
 to the browser it undergoes the below process:
@@ -520,7 +521,7 @@ to the browser it undergoes the below process:
 * Rendering - Construct DOM Tree → Render Tree → Layout of Render Tree →
   Painting the render tree
 
-Browser
+Браузер
 -------
 
 The browser's functionality is to present the web resource you choose, by
@@ -571,8 +572,8 @@ The components of the browsers are:
   support storage mechanisms such as localStorage, IndexedDB, WebSQL and
   FileSystem.
 
-HTML parsing
-------------
+Разбор HTML
+-----------
 
 The rendering engine starts getting the contents of the requested
 document from the networking layer. This will usually be done in 8kB chunks.
@@ -619,8 +620,8 @@ set to "complete" and a "load" event is fired.
 Note there is never an "Invalid Syntax" error on an HTML page. Browsers fix
 any invalid content and go on.
 
-CSS interpretation
-------------------
+Интерпретация CSS
+-----------------
 
 * Parse CSS files, ``<style>`` tag contents, and ``style`` attribute
   values using `"CSS lexical and syntax grammar"`_
@@ -629,8 +630,8 @@ CSS interpretation
 * A CSS parser can be top-down or bottom-up when a specific parser generator
   is used.
 
-Page Rendering
---------------
+Отрисовка страницы
+------------------
 
 * Create a 'Frame Tree' or 'Render Tree' by traversing the DOM nodes, and
   calculating the CSS style values for each node.
@@ -663,8 +664,8 @@ Page Rendering
   via Direct3D/OpenGL. The GPU command buffer(s) are flushed to the GPU for
   asynchronous rendering and the frame is sent to the window server.
 
-GPU Rendering
--------------
+Отрисовка на графическом процессоре (GPU)
+-----------------------------------------
 
 * During the rendering process the graphical computing layers can use general
   purpose ``CPU`` or the graphical processor ``GPU`` as well.
@@ -678,8 +679,8 @@ GPU Rendering
 Window Server
 -------------
 
-Post-rendering and user-induced execution
------------------------------------------
+Пост-отрисовка и выполнение действий, вызванных пользователем
+-------------------------------------------------------------
 
 After rendering has been completed, the browser executes JavaScript code as a result
 of some timing mechanism (such as a Google Doodle animation) or user
@@ -709,3 +710,5 @@ page rendering and painting.
 .. _`downgrade attack`: http://en.wikipedia.org/wiki/SSL_stripping
 .. _`OSI Model`: https://en.wikipedia.org/wiki/OSI_model
 .. _`Spanish`: https://github.com/gonzaleztroyano/what-happens-when-ES
+.. _`English`: https://github.com/alex/what-happens-when#what-happens-when
+.. _`varies by OS`: https://en.wikipedia.org/wiki/Hosts_%28file%29#Location_in_the_file_system
